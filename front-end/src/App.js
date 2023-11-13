@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import APILoader from './APILoader';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <p>
           AWS Test App for testing deployment.
         </p>
+        <APILoader />
       </header>
     </div>
   );
