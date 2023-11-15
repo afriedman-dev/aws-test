@@ -1,66 +1,32 @@
-import React from "react"; 
-import { Nav, Navbar, Container, Row, Col } from "react-bootstrap"; 
-import "bootstrap/dist/css/bootstrap.css"; 
-import "./App.css"; 
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; 
-import CreateTask from "./Components/CreateTask"; 
-import EditTask from "./Components/EditTask"; 
-import TaskList from "./Components/TaskList";
+import ListHeader from './components/listComponents/ListHeader';
+import ListItem from './components/listComponents/ListItem';
+import { useEffect, useState } from 'react';
 
-const App = () => { 
-  return ( 
-    <Router> 
-    <div className="App"> 
-      <header className="App-header"> 
-      <Navbar bg="dark" variant="dark"> 
-        <Container> 
-        <Navbar.Brand> 
-          <Link to={"/create-task"} 
-            className="nav-link"> 
-            React App 
-          </Link>
-        </Navbar.Brand> 
+const App = () => {
+    const userEmail = 'adam@test.com'; // todo grab later instead of hardcode
+    const [todos, setTodos] = useState(null);
 
-        <Nav className="justify-content-end"> 
-          <Nav> 
-            <Link to={"/create-task"} 
-              className="nav-link"> 
-              Create Task
-            </Link> 
-          </Nav> 
+    const getData = async () => {
+        try {
+            const res = await fetch(`http://localhost:3001/todos/${userEmail}`);
+            const jsonTodos = await res.json();
+            setTodos(jsonTodos);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-          <Nav> 
-            <Link to={"/task-list"}
-              className="nav-link">
-              Task List 
-            </Link> 
-          </Nav> 
-        </Nav> 
-        </Container> 
-      </Navbar> 
-      </header> 
+    useEffect(() => getData, []);
 
-      <Container> 
-      <Row> 
-        <Col md={12}> 
-        <div className="wrapper"> 
-          <Routes> 
-            <Route exact path="/"
-              element={(<CreateTask />)} /> 
-            <Route path="/create-task"
-              element={(<CreateTask />)} /> 
-            <Route path="/edit-task/:id"
-              element={(<EditTask />)} /> 
-            <Route path="/task-list"
-              element={(<TaskList />)} /> 
-          </Routes> 
-        </div> 
-        </Col> 
-      </Row> 
-      </Container> 
-    </div> 
-    </Router> 
-  ); 
-}; 
+    // Sort todos by date
+    const sortedTodos = todos?.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    return (
+        <div className='app'>
+            <ListHeader listName={'Test List'} />
+            {sortedTodos?.map((todo) => <ListItem key={todo.id} todo={todo} />)}
+        </div>
+    );
+};
 
 export default App;
