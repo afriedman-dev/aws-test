@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 const ListModal = ({ mode, setShowModal, getData, todo }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(null);
     const editMode = mode === 'edit';
 
     const [data, setData] = useState({
-        user_email: editMode ? todo.user_email : 'adam@test.com', // TODO dont hardcode email
+        user_email: editMode ? todo.user_email : cookies.Email,
         title: editMode ? todo.title : undefined,
         progress: editMode ? todo.progress : 50,
         date: editMode ? todo.date : new Date(),

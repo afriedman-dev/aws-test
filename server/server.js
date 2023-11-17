@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const pool = require('./db');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -67,6 +69,48 @@ app.delete('/todos/:id', async (req, res) => {
   } catch (err) {
     console.error(`DELETE /todos error: ${err}`);
     res.status(500).send(err);
+  }
+});
+
+// signup
+app.post('/signup', async (req, res) => {
+  const { email, password } = req.body;
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  try {
+    const newUser = await pool.query(`INSERT INTO todoapp.users(email, hashed_password) VALUES($1, $2)`,
+      [email, hashedPassword]);
+
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr' });
+    res.json({ email, token });
+  } catch (err) {
+    console.error(`POST /signup error: ${err}`);
+    res.json({ detail: err.detail });
+  }
+});
+
+// login
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await pool.query('SELECT * FROM todoapp.users WHERE email = $1', [email]);
+
+    if (!user.rows.length) {
+      return res.json({ detail: 'User does not exits.' });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.rows[0].hashed_password);
+
+    if (passwordMatch) {
+      const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr' });
+      res.json({ 'email': user.rows[0].email, token });
+    } else {
+      res.json({ detail: 'Login failed.' });
+    }
+  } catch (err) {
+    console.error(`POST /login error: ${err}`);
+    res.json({ detail: err.detail });
   }
 });
 

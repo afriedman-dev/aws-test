@@ -183,6 +183,9 @@ code {
 
   .task-title {
     display: inline-block;
+    width: 300px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
   .info-container {
@@ -272,4 +275,31 @@ code {
     border: none;
     padding: 10px;
     color: rgb(35, 38, 47);
+  }
+
+  .copyright {
+    font-size: 13px;
+    margin: 10px;
+    color: rgb(114, 114, 144);
+  }
+
+  .user-email {
+    float: right;
+    font-size: 13px;
+    margin: 10px;
+    color: rgb(114, 114, 144);
+  }
+
+  .outer-bar {
+    width: 200px;
+    height: 14px;
+    background-color: rgb(216, 216, 216);
+    border-radius: 7px;
+    overflow: hidden;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .inner-bar {
+    height: 14px;
   }

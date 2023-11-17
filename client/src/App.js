@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import ListHeader from './components/listComponents/ListHeader';
 import ListItem from './components/listComponents/ListItem';
 import Auth from './components/authComponents/Auth';
 
 const App = () => {
-    const userEmail = 'adam@test.com'; // todo grab later instead of hardcode
+    const [cookies, setCookie, removeCookie] = useCookies(null);
+    const userEmail = cookies.Email;
+    const authToken = cookies.AuthToken;
     const [todos, setTodos] = useState(null);
-
-    const authToken = false;
 
     const getData = async () => {
         try {
@@ -34,9 +35,11 @@ const App = () => {
             { authToken &&
                 <>
                 <ListHeader listName={'Test List'} getData={getData} />
+                <p className="user-email">Welcome back {userEmail}</p>
                 {sortedTodos?.map((todo) => <ListItem key={todo.id} todo={todo} getData={getData} />)}
                 </>
             }
+            <p className="copyright">© afriedmandev LLC</p>
         </div>
     );
 };
