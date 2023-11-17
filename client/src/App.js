@@ -8,7 +8,7 @@ const App = () => {
 
     const getData = async () => {
         try {
-            const res = await fetch(`http://localhost:3001/todos/${userEmail}`);
+            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${userEmail}`);
             const jsonTodos = await res.json();
             setTodos(jsonTodos);
         } catch (err) {
@@ -23,8 +23,8 @@ const App = () => {
 
     return (
         <div className='app'>
-            <ListHeader listName={'Test List'} />
-            {sortedTodos?.map((todo) => <ListItem key={todo.id} todo={todo} />)}
+            <ListHeader listName={'Test List'} getData={getData} />
+            {sortedTodos?.map((todo) => <ListItem key={todo.id} todo={todo} getData={getData} />)}
         </div>
     );
 };
