@@ -1,10 +1,13 @@
+import { useEffect, useState } from 'react';
 import ListHeader from './components/listComponents/ListHeader';
 import ListItem from './components/listComponents/ListItem';
-import { useEffect, useState } from 'react';
+import Auth from './components/authComponents/Auth';
 
 const App = () => {
     const userEmail = 'adam@test.com'; // todo grab later instead of hardcode
     const [todos, setTodos] = useState(null);
+
+    const authToken = false;
 
     const getData = async () => {
         try {
@@ -16,15 +19,24 @@ const App = () => {
         }
     };
 
-    useEffect(() => getData, []);
+    useEffect(() => {
+        if (authToken) {
+            getData();
+        }
+    }, []);
 
     // Sort todos by date
     const sortedTodos = todos?.sort((a,b) => new Date(a.date) - new Date(b.date));
 
     return (
         <div className='app'>
-            <ListHeader listName={'Test List'} getData={getData} />
-            {sortedTodos?.map((todo) => <ListItem key={todo.id} todo={todo} getData={getData} />)}
+            {!authToken && <Auth />}
+            { authToken &&
+                <>
+                <ListHeader listName={'Test List'} getData={getData} />
+                {sortedTodos?.map((todo) => <ListItem key={todo.id} todo={todo} getData={getData} />)}
+                </>
+            }
         </div>
     );
 };
