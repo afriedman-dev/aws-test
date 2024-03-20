@@ -4,6 +4,8 @@ jobs:
   test_job:
     name: Echo Test Secret
     runs-on: ubuntu-22.04
+    env:
+      LOCAL_TEST_SECRET: ${{ secrets.TEST_SECRET }}
     steps:
       - name: Echo Test Secret
-        run: echo $TEST_SECRET
+        run: echo $LOCAL_TEST_SECRET
