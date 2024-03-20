@@ -5,7 +5,8 @@ jobs:
     name: Echo Test Secret
     runs-on: ubuntu-22.04
     env:
-      LOCAL_TEST_SECRET: ${{ secrets.TEST_SECRET }}
+      CODESPACE_TEST_SECRET: ${{ secrets.TEST_SECRET }}
+      REPO_TEST_SECRET: ${{ secrets.REPO_TEST_SECRET }}
     steps:
       - name: Echo Test Secret
-        run: echo $LOCAL_TEST_SECRET
+        run: echo "Codespace Secret = $CODESPACE_TEST_SECRET \n Repo Secret = $"
