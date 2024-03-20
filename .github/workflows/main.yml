@@ -1,0 +1,9 @@
+on:
+  workflow_dispatch:
+jobs:
+  test_job:
+    name: Echo Test Secret
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Echo Test Secret
+        run: echo $TEST_SECRET
